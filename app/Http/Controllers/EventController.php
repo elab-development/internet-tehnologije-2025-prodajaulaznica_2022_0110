@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\Auth;
+use App\Models\TicketType;
 
 class EventController extends Controller
 {
@@ -94,5 +95,84 @@ class EventController extends Controller
         $event->update($validated);
 
         return redirect()->route('dashboard')->with('success', 'Događaj je uspešno izmenjen!');
+    }
+    public function show(Event $event)
+    {
+        $event->load(['category', 'ticketTypes']);
+
+        return Inertia::render('Events/Show', [
+            'event' => $event,
+        ]);
+    }
+    public function create()
+    {
+        if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'moderator'])) {
+            return redirect()->route('dashboard')->with('error', 'Nemate dozvolu.');
+        }
+
+        $categories = Category::all();
+
+        return Inertia::render('Events/Create', [
+            'categories' => $categories,
+        ]);
+    }
+    public function store(Request $request)
+    {
+        if (!Auth::check() || !in_array(Auth::user()->role, ['admin', 'moderator'])) {
+            return redirect()->route('dashboard')->with('error', 'Nemate dozvolu.');
+        }
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after_or_equal:date_start',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:draft,published,cancelled',
+        ]);
+
+        $event = Event::create($validated);
+
+        TicketType::create([
+            'event_id' => $event->id,
+            'name' => 'standard',
+            'price' => 1000,
+            'capacity' => 500,
+            'sold' => 0,
+        ]);
+
+        TicketType::create([
+            'event_id' => $event->id,
+            'name' => 'premium',
+            'price' => 3000,
+            'capacity' => 200,
+            'sold' => 0,
+        ]);
+
+        TicketType::create([
+            'event_id' => $event->id,
+            'name' => 'vip',
+            'price' => 8000,
+            'capacity' => 50,
+            'sold' => 0,
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Događaj je uspešno kreiran!');
+    }
+    public function updateTicketPrice(Request $request, TicketType $ticketType)
+    {
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            return redirect()->back()->with('error', 'Nemate dozvolu.');
+        }
+
+        $validated = $request->validate([
+            'price' => 'required|numeric|min:0',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        $ticketType->update($validated);
+
+        return redirect()->back()->with('success', 'Cena je uspešno izmenjena!');
     }
 }

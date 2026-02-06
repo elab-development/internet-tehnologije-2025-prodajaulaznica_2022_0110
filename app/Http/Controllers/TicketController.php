@@ -3,32 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class TicketController extends Controller
 {
-    public function index(Request $request): Response
+    public function index()
     {
-        $tickets = Ticket::all();
+        $tickets = Ticket::with(['event', 'ticketType', 'order'])
+            ->where('user_id', Auth::id())
+            ->orderBy('purchased_at', 'desc')
+            ->get();
 
-        return view('ticket.index', [
+        return Inertia::render('Tickets/Index', [
             'tickets' => $tickets,
         ]);
-    }
-
-    public function show(Request $request, Ticket $ticket): Response
-    {
-        return view('ticket.show', [
-            'ticket' => $ticket,
-        ]);
-    }
-
-    public function destroy(Request $request, Ticket $ticket): Response
-    {
-        $ticket->delete();
-
-        return redirect()->route('ticket.index');
     }
 }
