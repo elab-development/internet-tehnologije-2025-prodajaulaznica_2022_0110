@@ -1,0 +1,61 @@
+created:
+    - app/Http/Controllers/AuthController.php
+    - app/Http/Controllers/CategoryController.php
+    - app/Http/Controllers/EventController.php
+    - app/Http/Controllers/TicketTypeController.php
+    - app/Http/Controllers/OrderController.php
+    - app/Http/Controllers/TicketController.php
+    - database/factories/UserFactory.php
+    - database/factories/CategoryFactory.php
+    - database/factories/EventFactory.php
+    - database/factories/TicketTypeFactory.php
+    - database/factories/OrderFactory.php
+    - database/factories/TicketFactory.php
+    - database/migrations/2026_02_05_200917_create_users_table.php
+    - database/migrations/2026_02_05_200918_create_categories_table.php
+    - database/migrations/2026_02_05_200919_create_events_table.php
+    - database/migrations/2026_02_05_200920_create_ticket_types_table.php
+    - database/migrations/2026_02_05_200921_create_orders_table.php
+    - database/migrations/2026_02_05_200922_create_tickets_table.php
+    - app/Models/User.php
+    - app/Models/Category.php
+    - app/Models/Event.php
+    - app/Models/TicketType.php
+    - app/Models/Order.php
+    - app/Models/Ticket.php
+    - database/seeders/UserSeeder.php
+    - database/seeders/CategorySeeder.php
+    - database/seeders/EventSeeder.php
+    - database/seeders/TicketTypeSeeder.php
+    - tests/Feature/Http/Controllers/AuthControllerTest.php
+    - tests/Feature/Http/Controllers/CategoryControllerTest.php
+    - tests/Feature/Http/Controllers/EventControllerTest.php
+    - tests/Feature/Http/Controllers/TicketTypeControllerTest.php
+    - tests/Feature/Http/Controllers/OrderControllerTest.php
+    - tests/Feature/Http/Controllers/TicketControllerTest.php
+    - app/Http/Requests/AuthRegisterRequest.php
+    - app/Http/Requests/AuthLoginRequest.php
+    - app/Http/Requests/CategoryStoreRequest.php
+    - app/Http/Requests/CategoryUpdateRequest.php
+    - app/Http/Requests/EventStoreRequest.php
+    - app/Http/Requests/EventUpdateRequest.php
+    - app/Http/Requests/TicketTypeStoreRequest.php
+    - app/Http/Requests/TicketTypeUpdateRequest.php
+    - app/Http/Requests/OrderStoreRequest.php
+    - resources/views/category/index.blade.php
+    - resources/views/event/index.blade.php
+    - resources/views/event/show.blade.php
+    - resources/views/ticket_type/index.blade.php
+    - resources/views/order/index.blade.php
+    - resources/views/order/show.blade.php
+    - resources/views/ticket/index.blade.php
+    - resources/views/ticket/show.blade.php
+updated:
+    - routes/web.php
+models:
+    User: { name: 'string:100', surname: 'string:100', username: 'string:100 unique', email: 'string:255 unique', email_verified_at: 'timestamp nullable', password: 'string:255', role: 'enum:user,moderator,admin default:user', remember_token: 'string:100 nullable', timestamps: timestamps, relationships: { hasMany: 'Ticket, Order' } }
+    Category: { name: 'string:100 unique', description: 'text nullable', timestamps: timestamps, relationships: { hasMany: Event } }
+    Event: { title: 'string:255', description: text, location: 'string:255', date_start: datetime, date_end: 'datetime nullable', category_id: 'id foreign:categories', status: 'enum:draft,published,cancelled default:published', timestamps: timestamps, relationships: { belongsTo: Category, hasMany: 'TicketType, Ticket, Order' } }
+    TicketType: { event_id: 'id foreign:events', name: 'enum:standard,premium,vip', price: 'decimal:10,2', capacity: 'integer unsigned', sold: 'integer unsigned default:0', timestamps: timestamps, relationships: { belongsTo: Event, hasMany: Ticket } }
+    Order: { user_id: 'id foreign:users', event_id: 'id foreign:events', total_amount: 'decimal:10,2', status: 'enum:pending,completed,cancelled default:pending', timestamps: timestamps, relationships: { belongsTo: 'User, Event', hasMany: Ticket } }
+    Ticket: { user_id: 'id foreign:users', event_id: 'id foreign:events', ticket_type_id: 'id foreign:ticket_types', order_id: 'id foreign:orders', unique_code: 'string:64 unique nullable', price: 'decimal:10,2', purchased_at: datetime, status: 'enum:active,used,cancelled default:active', timestamps: timestamps, relationships: { belongsTo: 'User, Event, TicketType, Order' } }

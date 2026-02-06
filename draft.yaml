@@ -1,0 +1,162 @@
+models:
+
+  User:
+    name: string:100
+    surname: string:100
+    username: string:100 unique
+    email: string:255 unique
+    email_verified_at: timestamp nullable
+    password: string:255
+    role: enum:user,moderator,admin default:user
+    remember_token: string:100 nullable
+    timestamps: timestamps
+    relationships:
+      hasMany: Ticket, Order
+
+  Category:
+    name: string:100 unique
+    description: text nullable
+    timestamps: timestamps
+    relationships:
+      hasMany: Event
+
+  Event:
+    title: string:255
+    description: text
+    location: string:255
+    date_start: datetime
+    date_end: datetime nullable
+    category_id: id foreign:categories
+    status: enum:draft,published,cancelled default:published
+    timestamps: timestamps
+    relationships:
+      belongsTo: Category
+      hasMany: TicketType, Ticket, Order
+
+  TicketType:
+    event_id: id foreign:events
+    name: enum:standard,premium,vip
+    price: decimal:10,2
+    capacity: integer unsigned
+    sold: integer unsigned default:0
+    timestamps: timestamps
+    relationships:
+      belongsTo: Event
+      hasMany: Ticket
+
+  Order:
+    user_id: id foreign:users
+    event_id: id foreign:events
+    total_amount: decimal:10,2
+    status: enum:pending,completed,cancelled default:pending
+    timestamps: timestamps
+    relationships:
+      belongsTo: User, Event
+      hasMany: Ticket
+
+  Ticket:
+    user_id: id foreign:users
+    event_id: id foreign:events
+    ticket_type_id: id foreign:ticket_types
+    order_id: id foreign:orders
+    unique_code: string:64 unique nullable
+    price: decimal:10,2
+    purchased_at: datetime
+    status: enum:active,used,cancelled default:active
+    timestamps: timestamps
+    relationships:
+      belongsTo: User, Event, TicketType, Order
+
+
+# =============================================================================
+# CONTROLLERS
+# =============================================================================
+
+controllers:
+
+  Auth:
+    register:
+      validate: name, surname, username, email, password
+      save: user
+      respond: user, 201
+    login:
+      validate: email, password
+      respond: 200
+    logout:
+      respond: 200
+    me:
+      respond: user
+
+  Category:
+    index:
+      query: all
+      render: category.index with:categories
+    store:
+      validate: name, description
+      save: category
+      redirect: category.index
+    update:
+      validate: name, description
+      update: category
+      redirect: category.index
+    destroy:
+      delete: category
+      redirect: category.index
+
+  Event:
+    index:
+      query: all
+      render: event.index with:events
+    show:
+      render: event.show with:event
+    store:
+      validate: title, description, location, date_start, date_end, category_id, status
+      save: event
+      redirect: event.index
+    update:
+      validate: title, description, location, date_start, date_end, category_id, status
+      update: event
+      redirect: event.show
+    destroy:
+      delete: event
+      redirect: event.index
+
+  TicketType:
+    index:
+      query: all
+      render: ticket_type.index with:ticket_types
+    store:
+      validate: event_id, name, price, capacity
+      save: ticket_type
+      redirect: event.show
+    update:
+      validate: name, price, capacity
+      update: ticket_type
+      redirect: event.show
+    destroy:
+      delete: ticket_type
+      redirect: event.show
+
+  Order:
+    index:
+      query: all
+      render: order.index with:orders
+    show:
+      render: order.show with:order
+    store:
+      validate: event_id
+      save: order
+      redirect: order.show
+
+  Ticket:
+    index:
+      query: all
+      render: ticket.index with:tickets
+    show:
+      render: ticket.show with:ticket
+    destroy:
+      delete: ticket
+      redirect: ticket.index
+
+
+seeders: User, Category, Event, TicketType

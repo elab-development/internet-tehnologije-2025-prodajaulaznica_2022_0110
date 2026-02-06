@@ -1,0 +1,166 @@
+/* Auth pages styling */
+.auth-page {
+    min-height: 100vh;
+    background: #192132; /* Color 1 - tamno plava pozadina */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.auth-header-bar {
+    background-color: #708090; /* Color 2 - siva header traka */
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auth-header-title {
+    font-size: 1.5rem; /* Veća slova */
+    font-weight: 600;
+    color: #F8FAFC; /* Color 5 - bela */
+}
+
+.auth-back-link {
+    color: #F8FAFC; /* Color 5 */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem; /* Veća slova */
+}
+
+.auth-back-link:hover {
+    color: #00F0FF; /* Color 3 - cijan */
+}
+
+/* Main content */
+.auth-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 450px; /* Malo širi box */
+}
+
+.auth-title {
+    font-size: 2.5rem; /* Mnogo veća slova za naslov */
+    font-weight: 700;
+    color: #00F0FF; /* Color 3 - cijan */
+    margin-bottom: 2.5rem;
+}
+
+/* Form styling */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem; /* Malo više razmaka */
+}
+
+.auth-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.auth-label {
+    font-size: 1.125rem; /* Veća slova za labele */
+    color: #00F0FF; /* Color 3 - cijan */
+    font-weight: 600;
+}
+
+.auth-input,
+.auth-select {
+    width: 100%;
+    padding: 1rem 1.25rem; /* Veći padding */
+    background-color: #F8FAFC; /* Color 5 - bela/svetlo siva */
+    border: 2px solid #708090; /* Color 2 - sivi border */
+    border-radius: 50px;
+    color: #192132; /* Color 1 - tamno plavi tekst */
+    font-size: 1rem; /* Veća slova */
+    outline: none;
+    transition: all 0.2s;
+}
+
+.auth-input::placeholder {
+    color: rgba(25, 33, 50, 0.5);
+}
+
+.auth-input:focus,
+.auth-select:focus {
+    background-color: #FFFFFF;
+    border-color: #00F0FF; /* Color 3 - cijan border kad je fokus */
+    box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1);
+}
+
+.auth-select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'%3E%3Cpath fill='%23192132' d='M7 10L2 5h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.25rem center;
+    padding-right: 3rem;
+}
+
+/* Button */
+.auth-button {
+    width: 100%;
+    padding: 1rem 2rem; /* Veći button */
+    background-color: #00F0FF; /* Color 3 - cijan */
+    color: #192132; /* Color 1 - tamno plavi tekst */
+    border: none;
+    border-radius: 50px;
+    font-size: 1.25rem; /* Veća slova */
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+}
+
+.auth-button:hover:not(:disabled) {
+    background-color: #8A2BE2; /* Color 4 - ljubičasta na hover */
+    color: #F8FAFC; /* Color 5 - beli tekst */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 240, 255, 0.3);
+}
+
+.auth-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.auth-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Footer link */
+.auth-footer {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 1rem; /* Veća slova */
+    color: #F8FAFC; /* Color 5 */
+}
+
+.auth-footer-link {
+    color: #00F0FF; /* Color 3 - cijan */
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-footer-link:hover {
+    color: #8A2BE2; /* Color 4 - ljubičasta */
+    text-decoration: underline;
+}
+
+/* Error messages */
+.auth-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
