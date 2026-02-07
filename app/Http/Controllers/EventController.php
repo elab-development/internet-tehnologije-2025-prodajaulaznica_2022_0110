@@ -175,4 +175,60 @@ class EventController extends Controller
 
         return redirect()->back()->with('success', 'Cena je uspešno izmenjena!');
     }
+
+    // JSON API metode
+    public function apiIndex(Request $request)
+    {
+        $events = Event::with(['category', 'ticketTypes'])
+            ->where('status', 'published')
+            ->where('date_start', '>=', now())
+            ->orderBy('date_start', 'asc')
+            ->paginate(9);
+
+        return response()->json($events);
+    }
+
+    public function apiShow(Event $event)
+    {
+        $event->load(['category', 'ticketTypes']);
+        return response()->json($event);
+    }
+
+    public function apiStore(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after_or_equal:date_start',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:draft,published,cancelled',
+        ]);
+
+        $event = Event::create($validated);
+        return response()->json($event, 201);
+    }
+
+    public function apiUpdate(Request $request, Event $event)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required|string|max:255',
+            'date_start' => 'required|date',
+            'date_end' => 'required|date|after_or_equal:date_start',
+            'category_id' => 'required|exists:categories,id',
+            'status' => 'required|in:draft,published,cancelled',
+        ]);
+
+        $event->update($validated);
+        return response()->json($event);
+    }
+
+    public function apiDestroy(Event $event)
+    {
+        $event->delete();
+        return response()->json(['message' => 'Event deleted'], 200);
+    }
 }
