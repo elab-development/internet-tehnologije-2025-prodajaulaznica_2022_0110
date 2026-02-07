@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\Ticket;
 
 class ProfileController extends Controller
 {
@@ -18,9 +19,15 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): Response
     {
+        $tickets = Ticket::with(['event', 'ticketType', 'order'])
+            ->where('user_id', Auth::id())
+            ->orderBy('purchased_at', 'desc')
+            ->get();
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
+            'tickets' => $tickets,
         ]);
     }
 

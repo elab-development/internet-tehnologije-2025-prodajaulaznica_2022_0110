@@ -29,8 +29,7 @@ Route::middleware('auth')->group(function () {
     // Orders
     Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
 
-    // Tickets
-    Route::get('/my-tickets', [TicketController::class, 'index'])->name('tickets.index');
+
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

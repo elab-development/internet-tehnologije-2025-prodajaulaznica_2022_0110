@@ -78,7 +78,7 @@ class OrderController extends Controller
 
             DB::commit();
 
-            return redirect()->route('tickets.index')->with('success', 'Karte su uspešno kupljene!');
+            return redirect()->route('dashboard')->with('success', 'Karte su uspešno kupljene!');
 
         } catch (\Exception $e) {
             DB::rollBack();
