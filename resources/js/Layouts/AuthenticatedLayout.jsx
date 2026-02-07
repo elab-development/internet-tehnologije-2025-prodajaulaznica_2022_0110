@@ -10,7 +10,6 @@ export default function AuthenticatedLayout({ header, children }) {
 
     const [showingNavigationDropdown, setShowingNavigationDropdown] =
         useState(false);
-
     return (
         <div>
             <nav className="bg-slate-700 border-b-2 border-slate-600">
