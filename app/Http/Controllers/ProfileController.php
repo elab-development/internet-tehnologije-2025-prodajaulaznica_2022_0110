@@ -24,10 +24,21 @@ class ProfileController extends Controller
             ->orderBy('purchased_at', 'desc')
             ->get();
 
+        // Admin statistika - posledjih 5 dana
+        $adminStats = null;
+        if (Auth::user()->role === 'admin') {
+            $adminStats = Ticket::selectRaw('DATE(purchased_at) as date, COUNT(*) as count')
+                ->where('purchased_at', '>=', now()->subDays(5))
+                ->groupBy('date')
+                ->orderBy('date', 'desc')
+                ->get();
+        }
+
         return Inertia::render('Profile/Edit', [
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => session('status'),
             'tickets' => $tickets,
+            'adminStats' => $adminStats,
         ]);
     }
 

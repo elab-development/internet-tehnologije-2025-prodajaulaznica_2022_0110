@@ -1,7 +1,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Edit({ auth, mustVerifyEmail, status, tickets }) {
+export default function Edit({ auth, mustVerifyEmail, status, tickets, adminStats}) {
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('sr-RS', {
@@ -90,8 +90,39 @@ export default function Edit({ auth, mustVerifyEmail, status, tickets }) {
                             </p>
                         </div>
                     </div>
+                    {/* Admin Stats - Posledjih 5 dana */}
+                    {auth.user.role === 'admin' && adminStats && (
+                        <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700 mb-6">
+                            <h3 className="text-2xl font-bold text-cyan-400 mb-6">📊 Statistika prodaje (posledjih 5 dana)</h3>
+                            <div className="space-y-3">
+                                {adminStats.map((stat, index) => (
+                                    <div key={index} className="flex justify-between items-center p-4 bg-slate-700 rounded-lg">
+                                        <span className="text-white font-semibold">
+                                            {new Date(stat.date).toLocaleDateString('sr-RS', {
+                                                day: '2-digit',
+                                                month: 'long',
+                                                year: 'numeric'
+                                            })}
+                                        </span>
+                                        <span className="text-2xl font-bold text-cyan-400">
+                                            {stat.count} karata
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-6 p-4 bg-slate-700 rounded-lg border-t-4 border-cyan-400">
+                                <div className="flex justify-between items-center">
+                                    <span className="text-white font-bold text-lg">UKUPNO:</span>
+                                    <span className="text-3xl font-bold text-cyan-400">
+                                        {adminStats.reduce((sum, stat) => sum + stat.count, 0)} karata
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                 {/* Ulaznice */}
+                {auth.user.role !== 'admin' && (
                 <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
                     <h3 className="text-2xl font-bold text-cyan-400 mb-6">🎫 Moje ulaznice</h3>
 
@@ -177,7 +208,9 @@ export default function Edit({ auth, mustVerifyEmail, status, tickets }) {
                             </p>
                         </div>
                     )}
+
                 </div>
+                )}
             </div>
         </div>
         </AuthenticatedLayout>
