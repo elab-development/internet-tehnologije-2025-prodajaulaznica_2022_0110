@@ -38,7 +38,6 @@ class ProcessTicketPurchase implements ShouldQueue
      */
     public function handle(): void
     {
-        sleep(10);
 
         DB::beginTransaction();
 

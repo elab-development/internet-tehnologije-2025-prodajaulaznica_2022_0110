@@ -224,7 +224,7 @@ export default function ShowEvent({ auth, event }) {
                     </div>
 
                     {/* Purchase Summary (only for non-admin) */}
-                    {!isAdmin && calculateTotal() > 0 && (
+                    {calculateTotal() > 0 && (
                         <div className="bg-slate-800 rounded-2xl p-8 border-2 border-cyan-400">
                             <div className="flex justify-between items-center mb-6">
                                 <h3 className="text-2xl font-bold text-white">Ukupno za plaćanje:</h3>

@@ -17,7 +17,9 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="flex justify-between h-16">
                         <div className="flex items-center gap-3">
                             <span className="text-2xl">🎫</span>
-                            <span className="text-xl font-bold text-cyan-400">EPA Prodaja Karata</span>
+                            <Link href="/dashboard" className="text-xl font-bold text-cyan-400 hover:text-cyan-300 transition">
+                                EPA Prodaja Karata
+                            </Link>
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ms-6">

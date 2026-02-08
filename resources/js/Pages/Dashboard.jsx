@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 
 export default function Dashboard({ auth, events, categories, filters }) {
+    console.log('Props:', usePage().props);
+    console.log('Success message:', usePage().props.success);
     const [search, setSearch] = useState(filters.search || '');
     const [category, setCategory] = useState(filters.category || '');
     const [dateFrom, setDateFrom] = useState(filters.date_from || '');
@@ -52,7 +54,11 @@ export default function Dashboard({ auth, events, categories, filters }) {
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Dashboard" />
-
+            {usePage().props.flash?.success && (
+                <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-2xl z-50 animate-fade-in-out">
+                    ✅ {usePage().props.flash.success}
+                </div>
+            )}
             <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 py-8">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     {/* Header Section */}
