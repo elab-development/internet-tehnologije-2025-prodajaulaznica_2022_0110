@@ -69,7 +69,7 @@ export default function Dashboard({ auth, events, categories, filters }) {
                             </h1>
                             <p className="text-gray-400">
                                 {isAdmin && 'Administrator panel'}
-                                {isModerator && '⚙️ Moderator панел'}
+                                {isModerator && '⚙️ Moderator panel'}
                                 {isUser && 'Pregledajte aktuelne događaje i rezervišite ulaznice'}
                             </p>
                         </div>
