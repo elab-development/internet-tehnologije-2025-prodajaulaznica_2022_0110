@@ -1,59 +1,127 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎫 EPA Prodaja Karata
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Veb aplikacija za prodaju ulaznica za događaje razvijena kao seminarski rad na Fakultetu organizacionih nauka, Univerzitet u Beogradu.
 
-## About Laravel
+## 👥 Tim
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Ana Obradović (2022/0358)
+- Petar Nikolić (2022/0110)
+- Elza Osmani (2022/0409)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+**Mentor:** Aleksandar Joksimović
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Tehnologije
 
-## Learning Laravel
+### Backend
+- Laravel 12
+- PHP 8.4
+- MySQL 8.0
+- Redis (Queue sistem)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Frontend
+- React 18
+- Inertia.js
+- Tailwind CSS
+- Vite
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### DevOps
+- Docker & Docker Compose
+- Git & GitHub
 
-## Laravel Sponsors
+## ✨ Funkcionalnosti
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- 🔐 Autentifikacija (Register/Login/Logout)
+- 👥 Role-based pristup (User, Moderator, Admin)
+- 🎭 CRUD operacije za događaje
+- 🎫 Tri tipa ulaznica (Standard, Premium, VIP)
+- 🛒 Kupovina ulaznica sa Redis Queue sistemom (FIFO)
+- 🔍 Pretraga i filtriranje događaja
+- 📊 Admin statistika prodaje
+- 📱 Responzivan dizajn
 
-### Premium Partners
+## 📦 Instalacija
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### Preduslov
+- Docker Desktop
+- Git
 
-## Contributing
+### Pokretanje projekta
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+1. **Kloniraj repozitorijum:**
 
-## Code of Conduct
+git clone https://github.com/elab-development/internet-tehnologije-2025-prodajaulaznica_2022_0110.git
+cd internet-tehnologije-2025-prodajaulaznica_2022_0110
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Pokreni Docker containere:**
+docker-compose up -d --build
 
-## Security Vulnerabilities
+3. **Pokreni migracije i seedere:**
+docker exec ticket-app php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Otvori aplikaciju:**
+http://localhost:8000
 
-## License
+## 🐳 Docker Servisi
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Projekat koristi 4 Docker servisa:
+
+- **ticket-app** - Laravel backend (port 8000)
+- **ticket-vite** - Vite development server (port 5173)
+- **ticket-mysql** - MySQL baza (port 3307)
+- **ticket-redis** - Redis queue (port 6380)
+
+## 🔧 Korisne komande
+
+### Docker
+
+# Pokreni sve servise
+docker-compose up -d
+
+# Zaustavi sve servise
+docker-compose down
+
+# Vidi logove
+docker logs -f ticket-app
+
+# Pristupi Laravel containeru
+docker exec -it ticket-app bash
+
+### Laravel
+# Migracije
+docker exec ticket-app php artisan migrate
+
+# Seederi
+docker exec ticket-app php artisan db:seed
+
+# Clear cache
+docker exec ticket-app php artisan config:clear
+docker exec ticket-app php artisan cache:clear
+
+# Queue worker
+docker exec ticket-app php artisan queue:work
+
+## 📊 Baza podataka
+
+**Modeli:**
+- User (name, surname, username, email, role)
+- Category (name, description)
+- Event (title, description, location, dates, status)
+- TicketType (name, price, capacity, sold)
+- Order (user_id, event_id, total_amount, status)
+- Ticket (unique_code, price, purchased_at, status)
+
+## 🔒 Bezbednost
+
+Aplikacija je zaštićena od:
+- **CSRF** - Laravel middleware
+- **SQL Injection** - Eloquent ORM
+- **XSS** - React automatic escaping
+- **CORS** - Konfigurisan CORS policy
+
+## 📝 Licenca
+
+Projekat je kreiran u edukativne svrhe za kurs Internet Tehnologije.
+
+## 📧 Kontakt
+
+Za pitanja kontaktirajte članove tima preko GitHub-a.
