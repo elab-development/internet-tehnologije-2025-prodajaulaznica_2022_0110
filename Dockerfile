@@ -34,10 +34,6 @@ COPY --chown=www-data:www-data . /var/www
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node dependencies and build frontend
-RUN npm install
-RUN npm run build
-
 # Expose port 8080
 EXPOSE 8080
 
