@@ -34,7 +34,11 @@ COPY --chown=www-data:www-data . /var/www
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Expose port 9000
-EXPOSE 9000
+# Install Node dependencies and build frontend
+RUN npm install
+RUN npm run build
 
-CMD php artisan serve --host=0.0.0.0 --port=9000
+# Expose port 8080
+EXPOSE 8080
+
+CMD php artisan migrate --force && php artisan db:seed --force && php artisan serve --host=0.0.0.0 --port=8080
