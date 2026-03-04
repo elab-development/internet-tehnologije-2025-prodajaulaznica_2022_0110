@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link, router } from '@inertiajs/react';
+import EventMap from '@/Components/EventMap';
 
 export default function ShowEvent({ auth, event }) {
     const [quantities, setQuantities] = useState({
@@ -222,6 +223,14 @@ export default function ShowEvent({ auth, event }) {
                         {renderTicketCard('premium', 'Premium', '⭐')}
                         {renderTicketCard('vip', 'VIP', '👑')}
                     </div>
+
+                    {/* Mapa lokacije */}
+                    {event.latitude && event.longitude && (
+                        <div className="mb-8">
+                            <h2 className="text-3xl font-bold text-white mb-6">📍 Lokacija događaja</h2>
+                            <EventMap event={event} />
+                        </div>
+                    )}
 
                     {/* Purchase Summary (only for non-admin) */}
                     {calculateTotal() > 0 && (

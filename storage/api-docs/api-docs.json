@@ -1,0 +1,550 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "EPA Prodaja Karata API",
+        "description": "API dokumentacija za EPA sistem prodaje karata",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/": {
+            "servers": [
+                {
+                    "url": "http://localhost:8000",
+                    "description": "Lokalni server"
+                }
+            ]
+        },
+        "/api/events": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Preuzmi listu publikovanih događaja",
+                "description": "Vraća paginiranu listu svih publikovanih događaja koji još nisu prošli",
+                "operationId": "apiGetEvents",
+                "responses": {
+                    "200": {
+                        "description": "Uspešna operacija",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "current_page": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "Rock Koncert"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Opis događaja"
+                                                    },
+                                                    "location": {
+                                                        "type": "string",
+                                                        "example": "Beogradska Arena"
+                                                    },
+                                                    "date_start": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "date_end": {
+                                                        "type": "string",
+                                                        "format": "date-time"
+                                                    },
+                                                    "status": {
+                                                        "type": "string",
+                                                        "example": "published"
+                                                    },
+                                                    "category_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "category": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Muzika"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "ticket_types": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "standard"
+                                                                },
+                                                                "price": {
+                                                                    "type": "number",
+                                                                    "example": 1000
+                                                                },
+                                                                "capacity": {
+                                                                    "type": "integer",
+                                                                    "example": 500
+                                                                },
+                                                                "sold": {
+                                                                    "type": "integer",
+                                                                    "example": 42
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        },
+                                        "last_page": {
+                                            "type": "integer",
+                                            "example": 3
+                                        },
+                                        "per_page": {
+                                            "type": "integer",
+                                            "example": 9
+                                        },
+                                        "total": {
+                                            "type": "integer",
+                                            "example": 25
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Kreiraj novi događaj",
+                "description": "Kreira novi događaj (potrebna autentifikacija)",
+                "operationId": "apiStoreEvent",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "location",
+                                    "date_start",
+                                    "date_end",
+                                    "category_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Novi Koncert"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Detaljan opis događaja"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Kombank Dvorana"
+                                    },
+                                    "date_start": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-06-01T19:00:00Z"
+                                    },
+                                    "date_end": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2026-06-01T23:00:00Z"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "draft",
+                                            "published",
+                                            "cancelled"
+                                        ],
+                                        "example": "published"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Događaj uspešno kreiran",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 10
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "date_start": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "date_end": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "category_id": {
+                                            "type": "integer"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neautorizovan pristup"
+                    },
+                    "422": {
+                        "description": "Validacione greške"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/api/events/{event}": {
+            "get": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Preuzmi pojedinačni događaj",
+                "description": "Vraća detalje jednog događaja sa kategorijom i tipovima karata",
+                "operationId": "apiGetEvent",
+                "parameters": [
+                    {
+                        "name": "event",
+                        "in": "path",
+                        "description": "ID događaja",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Uspešna operacija",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "title": {
+                                            "type": "string",
+                                            "example": "Rock Koncert"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "Opis događaja"
+                                        },
+                                        "location": {
+                                            "type": "string",
+                                            "example": "Beogradska Arena"
+                                        },
+                                        "date_start": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "date_end": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "status": {
+                                            "type": "string",
+                                            "example": "published"
+                                        },
+                                        "category_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "category": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Muzika"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "ticket_types": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "standard"
+                                                    },
+                                                    "price": {
+                                                        "type": "number",
+                                                        "example": 1000
+                                                    },
+                                                    "capacity": {
+                                                        "type": "integer",
+                                                        "example": 500
+                                                    },
+                                                    "sold": {
+                                                        "type": "integer",
+                                                        "example": 42
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Događaj nije pronađen"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Izmeni postojeći događaj",
+                "description": "Ažurira podatke događaja (potrebna autentifikacija)",
+                "operationId": "apiUpdateEvent",
+                "parameters": [
+                    {
+                        "name": "event",
+                        "in": "path",
+                        "description": "ID događaja",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description",
+                                    "location",
+                                    "date_start",
+                                    "date_end",
+                                    "category_id",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "Izmenjeni Koncert"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Novi opis"
+                                    },
+                                    "location": {
+                                        "type": "string",
+                                        "example": "Štark Arena"
+                                    },
+                                    "date_start": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "date_end": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                    },
+                                    "category_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "draft",
+                                            "published",
+                                            "cancelled"
+                                        ],
+                                        "example": "published"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Događaj uspešno ažuriran",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "title": {
+                                            "type": "string"
+                                        },
+                                        "description": {
+                                            "type": "string"
+                                        },
+                                        "location": {
+                                            "type": "string"
+                                        },
+                                        "date_start": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "date_end": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "category_id": {
+                                            "type": "integer"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neautorizovan pristup"
+                    },
+                    "404": {
+                        "description": "Događaj nije pronađen"
+                    },
+                    "422": {
+                        "description": "Validacione greške"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Obriši događaj",
+                "description": "Briše događaj iz baze (potrebna autentifikacija)",
+                "operationId": "apiDeleteEvent",
+                "parameters": [
+                    {
+                        "name": "event",
+                        "in": "path",
+                        "description": "ID događaja",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Događaj uspešno obrisan",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Event deleted"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Neautorizovan pristup"
+                    },
+                    "404": {
+                        "description": "Događaj nije pronađen"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Events",
+            "description": "Events"
+        }
+    ]
+}

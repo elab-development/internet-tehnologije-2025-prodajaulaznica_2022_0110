@@ -30,7 +30,7 @@ class ProfileController extends Controller
             $adminStats = Ticket::selectRaw('DATE(purchased_at) as date, COUNT(*) as count')
                 ->where('purchased_at', '>=', now()->subDays(5))
                 ->groupBy('date')
-                ->orderBy('date', 'desc')
+                ->orderBy('date', 'asc')
                 ->get();
         }
 

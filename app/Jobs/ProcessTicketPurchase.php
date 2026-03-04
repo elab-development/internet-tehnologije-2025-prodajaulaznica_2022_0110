@@ -13,6 +13,8 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use App\Mail\TicketPurchased;
+use Illuminate\Support\Facades\Mail;
 
 class ProcessTicketPurchase implements ShouldQueue
 {
@@ -73,14 +75,14 @@ class ProcessTicketPurchase implements ShouldQueue
                 'status' => 'completed',
             ]);
 
-            $this->orderId = $order->id;
+            $createdTickets = [];
 
             // Kreiraj tickets
             foreach ($ticketsToCreate as $ticketData) {
                 $ticketType = $ticketData['ticket_type'];
 
                 for ($i = 0; $i < $ticketData['quantity']; $i++) {
-                    Ticket::create([
+                    $ticket = Ticket::create([
                         'user_id' => $this->userId,
                         'event_id' => $this->eventId,
                         'ticket_type_id' => $ticketType->id,
@@ -90,13 +92,20 @@ class ProcessTicketPurchase implements ShouldQueue
                         'purchased_at' => now(),
                         'status' => 'active',
                     ]);
+
+                    $createdTickets[] = $ticket; // Dodaj u array
                 }
 
                 // Ažuriraj sold count
                 $ticketType->increment('sold', $ticketData['quantity']);
             }
 
+            // Pošalji email
+            $user = \App\Models\User::find($this->userId);
+            Mail::to($user->email)->send(new TicketPurchased($order, $createdTickets));
+
             DB::commit();
+
 
             Log::info("Uspešna kupovina - Order ID: {$order->id}, User ID: {$this->userId}");
 

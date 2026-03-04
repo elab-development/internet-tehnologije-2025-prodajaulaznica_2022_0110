@@ -1,5 +1,28 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { Line } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+} from 'chart.js';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+);
 
 export default function Edit({ auth, mustVerifyEmail, status, tickets, adminStats}) {
     const formatDate = (dateString) => {
@@ -93,7 +116,7 @@ export default function Edit({ auth, mustVerifyEmail, status, tickets, adminStat
                     {/* Admin Stats - Posledjih 5 dana */}
                     {auth.user.role === 'admin' && adminStats && (
                         <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700 mb-6">
-                            <h3 className="text-2xl font-bold text-cyan-400 mb-6">📊 Statistika prodaje (posledjih 5 dana)</h3>
+                            <h3 className="text-2xl font-bold text-cyan-400 mb-6">📊 Statistika prodaje (poslednjih 5 dana)</h3>
                             <div className="space-y-3">
                                 {adminStats.map((stat, index) => (
                                     <div key={index} className="flex justify-between items-center p-4 bg-slate-700 rounded-lg">
@@ -117,6 +140,51 @@ export default function Edit({ auth, mustVerifyEmail, status, tickets, adminStat
                                         {adminStats.reduce((sum, stat) => sum + stat.count, 0)} karata
                                     </span>
                                 </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* Admin Chart - Vizualizacija */}
+                    {auth.user.role === 'admin' && adminStats && adminStats.length > 0 && (
+                        <div className="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+                            <h3 className="text-2xl font-bold text-cyan-400 mb-6">📈 Grafički prikaz prodaje</h3>
+                            <div className="bg-slate-700 p-6 rounded-xl">
+                                <Line
+                                    data={{
+                                        labels: adminStats.map(stat =>
+                                            new Date(stat.date).toLocaleDateString('sr-RS', {
+                                                day: 'numeric',
+                                                month: 'short'
+                                            })
+                                        ),
+                                        datasets: [{
+                                            label: 'Broj prodatih karata',
+                                            data: adminStats.map(stat => stat.count),
+                                            borderColor: '#00F0FF',
+                                            backgroundColor: 'rgba(0, 240, 255, 0.1)',
+                                            tension: 0.4,
+                                            fill: true,
+                                        }]
+                                    }}
+                                    options={{
+                                        responsive: true,
+                                        plugins: {
+                                            legend: {
+                                                labels: { color: '#fff' }
+                                            }
+                                        },
+                                        scales: {
+                                            y: {
+                                                beginAtZero: true,
+                                                ticks: { color: '#fff' },
+                                                grid: { color: '#334155' }
+                                            },
+                                            x: {
+                                                ticks: { color: '#fff' },
+                                                grid: { color: '#334155' }
+                                            }
+                                        }
+                                    }}
+                                />
                             </div>
                         </div>
                     )}
